@@ -1,0 +1,83 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: apollomq
+  namespace: cocktail-system
+  labels:
+    app: apollomq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: apollomq
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: apollomq
+    spec:
+      containers:
+      - image: regi.acornsoft.io/cocktail-common/apache-apollo:latest
+        imagePullPolicy: Always
+        name: apollomq-01
+        ports:
+        - containerPort: 61680
+          name: port-fbgx
+          protocol: TCP
+        - containerPort: 61623
+          name: port-fpup
+          protocol: TCP
+        securityContext:
+          capabilities:
+            add:
+            - AUDIT_WRITE
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - NET_BIND_SERVICE
+            - NET_RAW
+            - SETGID
+            - SETFCAP
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apollomq-cluster-ip
+  namespace: cocktail-system
+  labels:
+    app: apollomq-cluster-ip
+spec:
+  type: ClusterIP
+  ports:
+  - name: port-qjjm
+    port: 61623
+    targetPort: 61623
+  selector:
+    app: apollomq
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: apollomq-node-port
+  namespace: cocktail-system
+  labels:
+    app: apollomq-node-port
+spec:
+  type: NodePort
+  ports:
+  - name: port-ptqo
+    port: 61680
+    targetPort: 61680
+  selector:
+    app: apollomq
