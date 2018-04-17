@@ -1,4 +1,4 @@
-kubeVersion: v1.9.4
+kubeversion: v1.9.4
 ports:
   - name: k8sapi
     port: 8443
