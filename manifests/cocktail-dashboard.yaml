@@ -21,8 +21,6 @@ spec:
       tolerations:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
-      nodeSelector:
-        dedicated: master
       containers:
       - image: redis:latest
         imagePullPolicy: Always
