@@ -6,13 +6,3 @@ metadata:
     component: prometheus
   name: prometheus-rules
   namespace: monitoring
-data:
-  alerts: |-
-    groups:
-    - name: prometheus.rules
-      rules:
-      - alert: FailedReload
-  rules: |-
-    groups:
-      - name: kubernetes.rules
-        rules:
