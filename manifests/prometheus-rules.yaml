@@ -1,3 +1,4 @@
+{% raw -%}
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -541,3 +542,4 @@ data:
           expr: sum by(instance) (rate(node_network_receive_bytes[1m]))
         - record: instance:node_network_transmit_bytes:rate:sum
           expr: sum by(instance) (rate(node_network_transmit_bytes[1m]))
+{%- endraw %}          
