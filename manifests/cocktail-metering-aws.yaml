@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
@@ -50,13 +50,6 @@ spec:
         image: regi.acornsoft.io/cocktail-common/cocktail-aws-metering:1.1.B000001
         imagePullPolicy: IfNotPresent
         name: metering-aws-01
-        resources:
-          limits:
-            cpu: 200m
-            memory: 128Mi
-          requests:
-            cpu: 100m
-            memory: 64Mi
         securityContext:
           capabilities:
             add:

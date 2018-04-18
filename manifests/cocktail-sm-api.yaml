@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: cocktail-api
@@ -86,13 +86,6 @@ spec:
           periodSeconds: 5
           successThreshold: 1
           timeoutSeconds: 10
-#        resources:
-#          limits:
-#            cpu: "2"
-#            memory: 1536Mi
-#          requests:
-#            cpu: "1"
-#            memory: 1Gi
         name: cocktail-api-01
         ports:
         - containerPort: 8080

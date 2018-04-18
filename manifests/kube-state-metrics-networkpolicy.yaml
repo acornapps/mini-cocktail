@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: kube-state-metrics
+  labels:
+    app: prometheus
+    component: kube-state-metrics
+spec:
+  podSelector:
+    matchLabels:
+      app: prometheus
+      component: kube-state-metrics
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          component: prometheus
+  - ports:
+    - port: 8080

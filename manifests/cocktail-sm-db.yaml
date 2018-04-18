@@ -14,7 +14,7 @@ spec:
     requests:
       storage: 10Gi
 ---
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: cocktail-cmdb
@@ -43,13 +43,6 @@ spec:
         - containerPort: 3306
           name: port-cmdb
           protocol: TCP
-#        resources:
-#          limits:
-#            cpu: "1"
-#            memory: 2Gi
-#          requests:
-#            cpu: 500m
-#            memory: 1Gi
         volumeMounts:
         - name: mysqldata
           mountPath: /var/lib/mysql

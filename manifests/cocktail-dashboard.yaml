@@ -1,5 +1,5 @@
 ---
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: redis
@@ -65,7 +65,7 @@ spec:
     app: redis
 
 ---
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: cocktail-dashboard

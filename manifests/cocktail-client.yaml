@@ -1,4 +1,4 @@
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
@@ -28,13 +28,6 @@ spec:
         - containerPort: 80
           name: port-nayr
           protocol: TCP
-        resources:
-          limits:
-            cpu: 200m
-            memory: 200Mi
-          requests:
-            cpu: 100m
-            memory: 100Mi
         securityContext:
           capabilities:
             add:

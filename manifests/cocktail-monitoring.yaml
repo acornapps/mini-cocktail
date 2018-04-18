@@ -27,7 +27,7 @@ spec:
     app: cocktail-monitoring
 
 ---
-apiVersion: apps/v1beta2
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   labels:
@@ -68,13 +68,6 @@ spec:
         - containerPort: 9000
           name: port-gnbr
           protocol: TCP
-        resources:
-          limits:
-            cpu: 1000m
-            memory: 1200Mi
-          requests:
-            cpu: 800m
-            memory: 1000Mi
         securityContext:
           capabilities:
             add:
