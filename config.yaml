@@ -5,5 +5,5 @@ ports:
   - name: dadhboard
     port: 30000
   - name: appservice
-    port: 30200
+    port: 32000
 description: A basic NGINX HTTP server TEST
