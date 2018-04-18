@@ -1,0 +1,161 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: cocktail-system
+  labels:
+    app: redis
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      nodeSelector:
+        dedicated: master
+      containers:
+      - image: redis:latest
+        imagePullPolicy: Always
+        name: redis-01
+        ports:
+        - containerPort: 6379
+          name: port-aqmt
+          protocol: TCP
+        securityContext:
+          capabilities:
+            add:
+            - AUDIT_WRITE
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - NET_BIND_SERVICE
+            - NET_RAW
+            - SETGID
+            - SETFCAP
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: cocktail-system
+  labels:
+    app: redis
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: 6379
+  selector:
+    app: redis
+
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cocktail-dashboard
+  namespace: cocktail-system
+  labels:
+    app: cocktail-dashboard
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cocktail-dashboard
+  template:
+    metadata:
+      labels:
+        app: cocktail-dashboard
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+      - image: regi.acornsoft.io/cocktail-common/cocktail-dashboard-develop:2.3.0-alpha.B000225
+        imagePullPolicy: IfNotPresent
+        name: cocktail-dashboard-02
+        ports:
+        - containerPort: 3000
+          protocol: TCP
+        env:
+        - name: SM_SERVER
+          value: cocktail-api:8080
+        - name: BD_SERVER
+          value: cocktail-api:8080
+        - name: REDIS_SERVER
+          value: redis:6379
+        - name: QUEUE_SERVER
+          value: apollomq-cluster-ip:61623
+        - name: MONITOR_SERVER
+          value: cocktail-monitoring.monitoring:9004
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /dashboard/check/liveness
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 2
+          successThreshold: 1
+          timeoutSeconds: 10
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /dashboard/check/readiness
+            port: 3000
+            scheme: HTTP
+          initialDelaySeconds: 30
+          periodSeconds: 2
+          successThreshold: 1
+          timeoutSeconds: 10
+        securityContext:
+          capabilities:
+            add:
+            - AUDIT_WRITE
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - NET_BIND_SERVICE
+            - NET_RAW
+            - SETGID
+            - SETFCAP
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cocktail-dashboard
+  name: cocktail-dashboard
+  namespace: cocktail-system
+spec:
+  type: ClusterIP
+  ports:
+  - port: 3000
+    targetPort: 3000
+  selector:
+    app: cocktail-dashboard

@@ -1,0 +1,144 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: cocktail-api
+  namespace: cocktail-system
+  labels:
+    app: cocktail-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cocktail-api
+  template:
+    metadata:
+      labels:
+        app: cocktail-api
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+      - env:
+        - name: CMDB_DRIVER
+          value: org.mariadb.jdbc.Driver
+        - name: CMDB_URL
+          value: jdbc:mariadb://cocktail-cmdb:3306/cocktail?useUnicode=true&charaterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull
+        - name: CMDB_USER
+          value: cocktail
+        - name: CMDB_PASSWORD
+          value: C0ckt@il
+        - name: CLIENT_CALLBACK_PATH
+          value: /callback/api/topic
+        - name: BUILD_ADD_JOB_URL
+          value: /job/BUILD
+        - name: BUILD_DELETE_JOB_URL
+          value: /job/{job-id}/BUILD
+        - name: BUILD_USE_REGISTER
+          value: "1"
+        - name: REGISTRY_URL
+          value: https://regi.acornsoft.io
+        - name: REGISTRY_USER
+          value: admin
+        - name: REGISTRY_PASSWORD
+          value: C0ckt@1lAdmin
+        - name: BUILD_GET_LATEST_BUILD_IMAGE_URL
+          value: /task/{task-id}/latest/images
+        - name: BUILD_RUN_BUILD_TASK_URL
+          value: /task/{task-id}/BUILD
+        - name: CLIENT_HOST
+          value: http://cocktail-client-cluster-ip
+        - name: BUILDER_HOST
+          value: http://cocktail-api:8080/builder
+        - name: GCP_BILLING_BUCKET
+          value: cc-billing-data
+        - name: GCP_BILLING_FILE_PREFIX
+          value: cc-billing-
+        - name: LOG_LEVEL
+          value: INFO
+        - name: MONITORING_HOST
+          value: http://cocktail-monitoring.monitoring:9004/monitoring-api
+        - name: JAVA_OPTIONS
+          value: '-server -XX:+UnlockExperimentalVMOptions -XX:+UseCGroupMemoryLimitForHeap '
+        - name: SERVER_TYPE
+          value: SOMAC
+        - name: DOCKER_URL
+          value: https://regi.acornsoft.io
+        - name: BUILDER_IMAGE
+          value: regi.acornsoft.io/cocktail-common/builder-base-image-master:2.3.0.B000006
+        - name: CA_PEM
+          value: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEQ1RDQ0FmR2dBd0lCQWdJSkFNU2NXenVocG1DcE1BMEdDU3FHU0liM0RRRUJDd1VBTUJzeEdUQVhCZ05WDQpCQU1NRUdsd0xURTNNaTB6TVMweU5TMHhPRFV3SGhjTk1UY3hNREU1TURjeU5qTXdXaGNOTWpjeE1ERTNNRGN5DQpOak13V2pBYk1Sa3dGd1lEVlFRRERCQnBjQzB4TnpJdE16RXRNalV0TVRnMU1JSUJJakFOQmdrcWhraUc5dzBCDQpBUUVGQUFPQ0FROEFNSUlCQ2dLQ0FRRUE4U0lZSE8yWVcvWXptVVJ3V055UEJKa1A0RWxXZFRSVmxoZTk0ZWlDDQpiTFVVOFZvNkJUYy9TNVFUN2I4S2NSdmtBRHNDcEpQR2V2RXNyM0dmZWZpc2xjVW5pTjlSZFQ4MFdPenZEOHZoDQpuM1Uvc25oQTltWXIrd2c2Tms1OCtuM3RPNnNXTFhNaFdFR0VlOWJEY2JsVytuTHpVeGF3N0NiTUwrejBwSjNvDQpnL3JUMXgxYU52NVZnbFNGc1lReUY2MENmZCtGRmttVGl1Y2Roc3JXRlZuaWF1dG1kRGZXMWNtYmcyM3g1cUNMDQpuQ3pIY1RFVFlIOU1EUmxWSFNTYkkwYldrS1NsZ1lBYUpEbUwyd3IxTFJTSXZLZi92Y2dWQ0hEK2t2UURBRnBhDQpjL012YVJ4UGNGNE10MkphRmdycCsvQk5FMUUrZjBzK3BNcGxtU1A2ODIwWmN3SURBUUFCbzFBd1RqQWRCZ05WDQpIUTRFRmdRVXhDbjBaRjB3UzZ0UnVOL05LZzhHdkpxdzVrRXdId1lEVlIwakJCZ3dGb0FVeENuMFpGMHdTNnRSDQp1Ti9OS2c4R3ZKcXc1a0V3REFZRFZSMFRCQVV3QXdFQi96QU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFrYXBRDQphTU5aNDBCL2hKMmtWVFNUaXdUa3FwTnVyNzF0T2kzTzdwbCtHcTA4SW9XTkhyZ09kUnhaNVRMcVpyUU1pR0l4DQppbTI1bVRxVVpsZmFZT3FNK0RadXZxbEVMTEVSTVpCU2xXWStMZGsrekdWQ3IrNFV3ODlpOWZHS3A2SkRvNEdKDQpzcldkUHFCUG13MWJCYXRDTGduN0VkNmlBc0pxOUdGSm8wZ1hSM0lLSnpJd2JLOE15MXhsZUZwSzZPZjNvZ0RsDQovNmxUYWlON3dPMlYrd2VrVGQ5OXp5UEJWWEs2RStEaHJzUGtqdDNTVGJYam96YjFNTEJRZ0creTdFa1d6c1FDDQptaktKK0NEczhEK1Y5alhwaDZnSUhCYVUrVTFNditPSGFhbjFiOXNJY3BMa2ZvYXlodHpBQWw1OWNIVHl0SmZwDQpJSXp3UDN3MlZHSnZWSVkvVkE9PQ0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+        - name: CERT_PEM
+          value: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlDeFRDQ0FhMmdBd0lCQWdJQkF6QU5CZ2txaGtpRzl3MEJBUXNGQURBYk1Sa3dGd1lEVlFRRERCQnBjQzB4DQpOekl0TXpFdE1qVXRNVGcxTUI0WERURTNNVEF4T1RBM01qWXpNRm9YRFRJM01UQXhOekEzTWpZek1Gb3dHREVXDQpNQlFHQTFVRUF3d05aRzlqYTJWeUxtTnNhV1Z1ZERDQ0FTSXdEUVlKS29aSWh2Y05BUUVCQlFBRGdnRVBBRENDDQpBUW9DZ2dFQkFPVWpPMTFBUzRjdVJwckNUSXVqakd5ZmxTdW5Xbnh4Zk13UDF5NXo1VlpOZmxXakNKVVphTm41DQpNWDN0Vit5T0p3ZFVHLzVrSzZXVHMvUzJRYVBWTUpBc2NENkhYbERqVGhZdXpaWGFxak9pZVVpUldIcVc1ZGNLDQpNam02clhOalFYWm1Yb1FaNy9yeGhINnoxdFVRQ3BFL1lNbndpVlcyK255ZEZqWjN2MnRxNHlpYUMvV01NUmR2DQpCWGUxbTBnTWJ2M01uYzU1Z2JUWlpCeFBNRDFMUytOeEYra1R2ckxCblVIT1IwQllRUzR1TG1UekdYZ0VQNTcrDQptdEpjSTZScHNici9aakozMUxrSzcrRkFiRVRUdjdpN3Q3ZWswakRvQkRxSjVteFU1RUkvVHRLakZ3YzA0ZG1DDQoxanI3TDJSUEhNWDMyTVFUTGpBYXJjS1FuaTVpQ1k4Q0F3RUFBYU1YTUJVd0V3WURWUjBsQkF3d0NnWUlLd1lCDQpCUVVIQXdJd0RRWUpLb1pJaHZjTkFRRUxCUUFEZ2dFQkFGL1Z2YzFGc0VUM1ZhUE05NmU2bjBmVGxaTll6TUh5DQpZY1Z1UXRRaHR3WFJ5MmxZV055dnZkNVNaWE8wUGZPSmh0dDhUMUZlQ3BtYW8yRjFoMGY4TFNlM2E0b1BGRDBEDQovVEw4UTZlZ1dKcVdSN0RKdEZpR1Q2MkZ6YlhZSUhldVdnSkdvY2VuTmxZdkhYL0VSYmp3dFJuUDhNMWhEdk9sDQpYUDN2ZEdHdFZMdWloZFI5bmdxaUNLa0RDMkdVYlRPNUJjTVphcC9NT0ZIK1RhQVlhSzlBSnZOZms4QUFDdWd2DQpJSHgyQlNhL1VaV2J5dUlYZnRXVFc0eUtNaEx5d3B4S0d5S2ZrRXFPeDUxODk0ZXg3K1g5MWpET0tLZms3dUllDQoxbUZHeDVtbHQzaXFpUUtoOFhaQlpqbnd5UTJtcUk4WWNSVVZyY25yN1QwSHp1YndXUFljNGEwPQ0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ==
+        - name: KEY_PEM
+          value: LS0tLS1CRUdJTiBSU0EgUFJJVkFURSBLRVktLS0tLQ0KTUlJRXBBSUJBQUtDQVFFQTVTTTdYVUJMaHk1R21zSk1pNk9NYkorVks2ZGFmSEY4ekEvWExuUGxWazErVmFNSQ0KbFJsbzJma3hmZTFYN0k0bkIxUWIvbVFycFpPejlMWkJvOVV3a0N4d1BvZGVVT05PRmk3TmxkcXFNNko1U0pGWQ0KZXBibDF3b3lPYnF0YzJOQmRtWmVoQm52K3ZHRWZyUFcxUkFLa1Q5Z3lmQ0pWYmI2ZkowV05uZS9hMnJqS0pvTA0KOVl3eEYyOEZkN1diU0F4dS9jeWR6bm1CdE5sa0hFOHdQVXRMNDNFWDZSTytzc0dkUWM1SFFGaEJMaTR1WlBNWg0KZUFRL252NmEwbHdqcEdteHV2OW1NbmZVdVFydjRVQnNSTk8vdUx1M3Q2VFNNT2dFT29ubWJGVGtRajlPMHFNWA0KQnpUaDJZTFdPdnN2WkU4Y3hmZll4Qk11TUJxdHdwQ2VMbUlKandJREFRQUJBb0lCQUZYUFZ1ajZMZzdHM3J3UQ0KTFpoUnZFSGxsWGlPcU0xWHR0TzR6dTNmaXpCQnZ5RVUrQjdXTURVSkpHYXpYcTBCSTA2VVNoTi9zZlRGRnF4Nw0KSUtQWkwrR2VNcjdIOVNNM3JNT1Q3WHZFTXQ4NVpsQXQxa082aFFKK0dBY1VpT1pnY21DRHY3dWE5d3MwTFZsQg0Kd2g5eWJYS3RtSEtudU5hM3VxQzJOMTVZaEFBV2h1bFdSdzgvc0tlZnNUOTA0c0J1dGllVlRkTEJ5QzNpa0tGOA0KK05jdjJvbFJXdTFzUTd6TlRkOCtkTTZPNERZYTAvT0pMN2ZvWGNPaEZZNVE3UUpxZllSQzByVXhuL3pCR2ZDSA0Kc2NaN28wUXU1ZG5BS3hyRlRyZ1htYTRJTUNRUW9lU203WWZJTW11OWpLV1RrdHZhTExTTFJuU09uWTg5bTVzaQ0KOVJjanhwRUNnWUVBODVXcW5kTjVYV2IxdFZWS256blJpS0JtTnp0WXFMNHJZWWxXV2pBYVY4bHE4SHVTVURKdg0KUHZEcDJiTUFnNmd4NUpDRDRzQ3Z3S0ZuMlVnT3FaSWRDNGZGeVgrMDl4WlpWR0xVcytpdHZmY2N2eE9aSFpUbg0KWnJIT3IxNzByMkJqL3lFclN6bytaWkIycGExV3gxcjIyaTNRaldSRlFCRXJSeVVid0hYSk1IY0NnWUVBOE5FTw0KOHBPSDFDcDNwK2d4UjZvSjQvUEkzMWNsUi8yN3lKbVJmdndyNnh2UERvQXlBc1hIZDNBUTcySHUvM2RmS1FBdA0KNGo5Z1hwMGpWclNDczMvTG4xdzBJRHFZcS90SDBwMEVqQlIwUXFob2lJRWFUMWxiUmc3dDA3bUx2ZzJxK2Rzeg0KOC80NEpQczBMVVF0T3o0ay9ORHEyKzlIRDNMR2NQR3dVWTE5RGFrQ2dZQUV0M0F2VUNuNGNnYnQ5UEhWOVhPbQ0KTnB6a0V1VWJsMXNWcjJnWnBQYk5ubHZRdmtQT0E3djl0d0tBTWFRZjZJRFcwU21NbVhpTnZWSmFkYmU2OXRaVA0KSTlUam12SnhHbUN1YnA5NXdGYWs2QVVKZWlLcjNQZENHTTFNdmdUMDVHUHJTOFFmMThmZmhaV1dqYTJ4ZklSdA0KSXhmM3RPcFdYRDYvU091cHBWNDQ3d0tCZ1FDcEExRG1WenpCWDN6VFQxY200T1JJSkZVYXl1TFRmL1ZIZU9Cdw0KcXpOM3N2RERVSjNJN0Y1dUtTejVsVlpUM2NmZjBzeGhPZkc4OWJSVHFpVUJMZlFQU0hzZEU0TUxVVFM3VUpCYw0KY0E2WXFmR1R2R2htd0dRYTYyZG5iWlh5TVUyS1JwcFQ2RnduT0ZjS1hnc1F4VERZYnhnbWUrejNucW8vb3FFSQ0KMjdDazRRS0JnUUNWeStEbSsvU1hSdHRHNE03RXZSVW4rUjl5V2FNSytxSjdmZStCS3orWHM2WDRYWW4xU1RwTQ0KT2Z6ejZUZ1BnUEMyOGlhNUJvdHpUdlI4OTAzdlNMRUFuaXFQYnVmVlZtNDBGTGJ5dDhack9ibmpOSDJ1bk1WMA0KbFkrQUZUcHBYdW55SWtibC9qb0pWcGgvSXM5SnB6RUY3TFVXNDY5Yll0N0c1Q0psK2I5d3ZnPT0NCi0tLS0tRU5EIFJTQSBQUklWQVRFIEtFWS0tLS0t
+        - name: BUILD_DB_URL
+          value: jdbc:mariadb://cocktail-cmdb:3306/builder?useUnicode=true&charaterEncoding=utf-8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+        image: regi.acornsoft.io/cocktail-common/cocktail-sm-api-develop:2.3.1.B000171
+        imagePullPolicy: IfNotPresent
+        livenessProbe:
+          failureThreshold: 2
+          httpGet:
+            path: /api/check/liveness
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 80
+          periodSeconds: 5
+          successThreshold: 1
+          timeoutSeconds: 10
+#        resources:
+#          limits:
+#            cpu: "2"
+#            memory: 1536Mi
+#          requests:
+#            cpu: "1"
+#            memory: 1Gi
+        name: cocktail-api-01
+        ports:
+        - containerPort: 8080
+          name: port-uamx
+          protocol: TCP
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /api/check/readiness
+            port: 8080
+            scheme: HTTP
+          initialDelaySeconds: 70
+          periodSeconds: 12
+          successThreshold: 1
+          timeoutSeconds: 10
+        securityContext:
+          capabilities:
+            add:
+            - AUDIT_WRITE
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - NET_BIND_SERVICE
+            - NET_RAW
+            - SETGID
+            - SETFCAP
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cocktail-api
+  name: cocktail-api
+  namespace: cocktail-system
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8080
+    targetPort: 8080
+  selector:
+    app: cocktail-api
