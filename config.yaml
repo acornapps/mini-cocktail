@@ -1,9 +1,9 @@
-kubeversion: v1.9.4
+kubeversion: 1.9.4
 ports:
   - name: k8sapi
     port: 8443
-  - name: dadhboard
-    port: 30000
   - name: appservice
     port: 32000
-description: A basic NGINX HTTP server TEST
+  - name: nodeport
+    port: 31000-31010
+description: Cocktail mini Service

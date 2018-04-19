@@ -19,7 +19,7 @@ spec:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
       containers:
-      - image: regi.acornsoft.io/cocktail-common/cocktail-dashboard-develop:2.3.0-alpha.B000233
+      - image: regi.acornsoft.io/cocktail-common/cocktail-dashboard-develop:2.3.0-alpha.B000231
         imagePullPolicy: IfNotPresent
         name: cocktail-dashboard-02
         ports:

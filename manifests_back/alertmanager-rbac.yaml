@@ -1,13 +1,14 @@
+---
 apiVersion: rbac.authorization.k8s.io/v1beta1
 kind: ClusterRoleBinding
 metadata:
   labels:
     app: prometheus
-    component: node-exporter
-  name: node-exporter
+    component: alertmanager
+  name: alertmanager
 subjects:
   - kind: ServiceAccount
-    name: node-exporter
+    name: alertmanager
     namespace: monitoring
 roleRef:
   apiGroup: rbac.authorization.k8s.io
@@ -19,6 +20,6 @@ kind: ServiceAccount
 metadata:
   labels:
     app: prometheus
-    component: node-exporter
-  name: node-exporter
+    component: alertmanager
+  name: alertmanager
   namespace: monitoring

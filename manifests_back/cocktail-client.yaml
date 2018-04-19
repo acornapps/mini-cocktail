@@ -1,0 +1,81 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  labels:
+    app: cocktail-client
+  name: cocktail-client
+  namespace: cocktail-system
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cocktail-client
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: cocktail-client
+    spec:
+      tolerations:
+        - key: node-role.kubernetes.io/master
+          effect: NoSchedule
+      containers:
+      - image: regi.acornsoft.io/cocktail-common/cocktail-dashboard-nginx-node:0.0.1.B000005
+        imagePullPolicy: IfNotPresent
+        name: cocktail-client-01
+        ports:
+        - containerPort: 80
+          name: port-nayr
+          protocol: TCP
+        securityContext:
+          capabilities:
+            add:
+            - AUDIT_WRITE
+            - DAC_OVERRIDE
+            - FOWNER
+            - FSETID
+            - KILL
+            - NET_BIND_SERVICE
+            - NET_RAW
+            - SETGID
+            - SETFCAP
+            - SETPCAP
+            - SETUID
+            - SYS_CHROOT
+          privileged: false
+          readOnlyRootFilesystem: false
+          runAsNonRoot: false
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cocktail-client-cluster-ip
+  name: cocktail-client-cluster-ip
+  namespace: cocktail-system
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 80
+  selector:
+    app: cocktail-client
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: cocktail-client-node-port
+  name: cocktail-client-node-port
+  namespace: cocktail-system
+spec:
+  type: NodePort
+  ports:
+  - nodePort: 32000
+    port: 80
+    targetPort: 80
+  selector:
+    app: cocktail-client
