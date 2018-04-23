@@ -59,7 +59,7 @@ spec:
         - key: node-role.kubernetes.io/master
           effect: NoSchedule
       containers:
-      - image: regi.acornsoft.io/cocktail-common/cocktail-sm-db-develop:2.3.1.B000025
+      - image: regi.acornsoft.io/cocktail-common/cocktail-sm-db-develop:2.3.1.B000027
         name: cocktail-cmdb-01
         ports:
         - containerPort: 3306
