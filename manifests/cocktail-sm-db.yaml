@@ -18,7 +18,7 @@ data:
     (cluster_seq, provider_account_seq, cluster_type, cluster_name, description, region_code, cube_type, auth_type, api_url, api_key, api_secret, billing_group_id,
     client_auth_data, client_key_data, server_auth_data, node_port_supported, ingress_supported, loadbalancer_supported, persistent_volume_supported, ingress_host,
     node_port_url, node_port_range, k8s_version, monitoring_db_user, monitoring_db_password, monitoring_db_host, monitoring_db_port, use_yn , created, creator, updated, updater)
-    VALUES(1, 1, 'CUBE', 'minikube', 'minikube', 'DEFAULT', 'MANAGED', 'CERT', 'https://kubernetes.default:443', 'admin', 'AdminPass', NULL, '', '', '', 'Y', 'Y', 'N', 'Y', '127.0.0.1', '127.0.0.1', '30000-32767', '1.9.4', 'root', 'root', 'http://cocktail-monitoring.monitoring', 9004, 'Y' , UTC_TIMESTAMP(), 1, UTC_TIMESTAMP(), 1);
+    VALUES(1, 1, 'CUBE', 'minikube', 'minikube', 'DEFAULT', 'MANAGED', 'CERT', 'https://kubernetes.default:443', 'admin', 'AdminPass', NULL, '', '', '', 'Y', 'Y', 'N', 'Y', '127.0.0.1', '127.0.0.1', '30000-32767', '1.8.0', 'root', 'root', 'http://cocktail-monitoring.monitoring', 9004, 'Y' , UTC_TIMESTAMP(), 1, UTC_TIMESTAMP(), 1);
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

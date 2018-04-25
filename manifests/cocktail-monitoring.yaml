@@ -60,7 +60,7 @@ spec:
           value: "true"
         - name: LOGGING_LEVEL
           value: INFO
-        image: regi.acornsoft.io/cocktail-common/cockail-monitoring-api:0.0.1.B000089
+        image: regi.acornsoft.io/cocktail-common/cockail-monitoring-api:0.0.1.B000098
         imagePullPolicy: IfNotPresent
         name: cocktail-monitoring-01
         ports:
