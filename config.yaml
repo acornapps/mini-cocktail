@@ -1,11 +1,5 @@
 kubeversion: 1.9.4
 ports:
-  - name: k8sapi
-    port: 8443
-  - name: grpc
-    port: 32080
-  - name: mongodb
-    port: 32017
   - name: appservice
     port: 32000
   - name: nodeport
