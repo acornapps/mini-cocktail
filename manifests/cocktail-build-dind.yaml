@@ -1,0 +1,43 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: cocktail-builder
+  namespace: cocktail-system
+spec:
+  selector:
+    app: cocktail-builder
+  ports:
+  - protocol: TCP
+    port: 2375
+    targetPort: 2375
+---
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: cocktail-builder
+  namespace: cocktail-system
+  labels:
+    app: cocktail-builder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: cocktail-builder
+  template:
+    metadata:
+      labels:
+        app: cocktail-builder
+    spec:
+      containers:
+      - image: docker:18.03-dind
+        imagePullPolicy: IfNotPresent
+        name: docker-dind
+        securityContext:
+          privileged: true
+        volumeMounts:
+        - mountPath: /var/lib/docker
+          name: docker-graph-storage
+      restartPolicy: Always
+      volumes:
+      - emptyDir: {}
+        name: docker-graph-storage
