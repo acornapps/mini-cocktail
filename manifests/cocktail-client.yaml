@@ -28,25 +28,26 @@ spec:
         - containerPort: 80
           name: port-nayr
           protocol: TCP
-        securityContext:
-          capabilities:
-            add:
-            - AUDIT_WRITE
-            - DAC_OVERRIDE
-            - FOWNER
-            - FSETID
-            - KILL
-            - NET_BIND_SERVICE
-            - NET_RAW
-            - SETGID
-            - SETFCAP
-            - SETPCAP
-            - SETUID
-            - SYS_CHROOT
-          privileged: false
-          readOnlyRootFilesystem: false
-          runAsNonRoot: false
-
+        livenessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /dashboard/check/liveness
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /dashboard/check/readiness
+            port: 80
+            scheme: HTTP
+          initialDelaySeconds: 5
+          periodSeconds: 10
+          successThreshold: 1
+          timeoutSeconds: 10
 ---
 apiVersion: v1
 kind: Service

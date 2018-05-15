@@ -44,7 +44,7 @@ spec:
             path: /dashboard/check/liveness
             port: 3000
             scheme: HTTP
-          initialDelaySeconds: 30
+          initialDelaySeconds: 10
           periodSeconds: 2
           successThreshold: 1
           timeoutSeconds: 10
@@ -54,7 +54,7 @@ spec:
             path: /dashboard/check/readiness
             port: 3000
             scheme: HTTP
-          initialDelaySeconds: 30
+          initialDelaySeconds: 10
           periodSeconds: 2
           successThreshold: 1
           timeoutSeconds: 10
@@ -76,7 +76,6 @@ spec:
           privileged: false
           readOnlyRootFilesystem: false
           runAsNonRoot: false
-
 ---
 apiVersion: v1
 kind: Service
