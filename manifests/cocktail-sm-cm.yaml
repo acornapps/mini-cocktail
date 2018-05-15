@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: monitoring
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: cocktail-system
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registcluster-script
+  namespace: cocktail-system
+  labels:
+    app: registcluster-script
+data:
+  1-register-somac-cluster.sql: |-
+    USE cocktail;
+
+    INSERT INTO provider_account
+    (provider_account_seq, provider_code, provider_name, description, account_group_id,account_use_type, api_account_id, api_account_password, use_yn, created, creator, updated, updater)
+    VALUES(1, 'OPM', 'minikube', 'minikube', '', 'USER', '', '', 'Y', UTC_TIMESTAMP(), 1, UTC_TIMESTAMP(), 1);
+
+    INSERT INTO clusters
+    (cluster_seq, provider_account_seq, cluster_type, cluster_name, description, region_code, cube_type, auth_type, api_url, api_key, api_secret, billing_group_id,client_auth_data, client_key_data, server_auth_data, node_port_supported, ingress_supported, loadbalancer_supported, persistent_volume_supported, ingress_host, node_port_url, node_port_range, k8s_version, monitoring_db_user, monitoring_db_password, monitoring_db_host, monitoring_db_port, use_yn , created, creator, updated, updater)
+    VALUES(1, 1, 'CUBE', 'minikube', 'minikube', 'DEFAULT', 'MANAGED', 'CERT', 'https://kubernetes.default:443', 'admin', 'AdminPass', NULL,'{{.CLIENT_CRT}}', '{{.CLIENT_KEY}}', '{{.CA_CRT}}', 'Y', 'Y', 'N', 'Y', '127.0.0.1', '127.0.0.1', '30000-32767', '1.9.4', 'root', 'root', 'http://cocktail-monitoring.monitoring', 9004, 'Y' , UTC_TIMESTAMP(), 1, UTC_TIMESTAMP(), 1);
+
+    INSERT INTO services ( service_seq , service_name, description, color_code, sort_order,registry_user_id, registry_user_password, build_job_seq, use_yn, created, creator, updated, updater )
+    VALUES ( 1,'mini', 'cocktail mini', 'gray', 1, 'minic', 'vqfVQU71', 1, 'Y', UTC_TIMESTAMP(), 1, UTC_TIMESTAMP(), 1);
+
+    INSERT INTO service_user ( service_seq, user_seq, created, creator )
+    VALUES ( 1, 1, UTC_TIMESTAMP(), 1 );
+
+    INSERT INTO service_cluster ( service_seq, cluster_seq, created, creator )
+    VALUES ( 1, 1, UTC_TIMESTAMP(), 1 );
+
+    INSERT INTO service_registry ( service_seq, project_id, created, creator )
+    VALUES ( 1, 15, UTC_TIMESTAMP(), 1 );
+
+    USE builder;
+
+    INSERT INTO jobs ( job_seq , job_name, job_type, use_yn, created , updated )
+    VALUES ( 1, 'BUILD_JOB', 'BUILD', 'Y', UTC_TIMESTAMP() ,UTC_TIMESTAMP() );
